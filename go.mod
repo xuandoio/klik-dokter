@@ -10,15 +10,14 @@ require (
 	github.com/go-playground/validator/v10 v10.4.1
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/joho/godotenv v1.4.0
-	github.com/uptrace/bun v1.1.5
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
 	golang.org/x/time v0.0.0-20210723032227-1f47c861a9ac
-	gopkg.in/yaml.v2 v2.4.0
 )
+
+require gopkg.in/yaml.v2 v2.4.0 // indirect
 
 require (
 	github.com/gin-contrib/sse v0.1.0 // indirect
-	github.com/go-pg/pg v8.0.7+incompatible
 	github.com/go-pg/zerochecker v0.2.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.5.7 // indirect
