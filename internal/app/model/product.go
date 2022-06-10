@@ -73,3 +73,12 @@ func FindProductByID(c *gin.Context, id int, db orm.DB) (Product, error) {
 
 	return product, err
 }
+
+func FindProductBySKU(c *gin.Context, sku string, db orm.DB) (Product, error) {
+	product := Product{
+		SKU: sku,
+	}
+
+	err := db.Model(&product).Where("sku=?", product.SKU).Select()
+	return product, err
+}

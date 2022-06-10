@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -57,6 +58,12 @@ func (h *Handler) ProductCreate(c *gin.Context) {
 	productRequest := request.Product{}
 	if err := c.ShouldBind(&productRequest); err != nil {
 		render.Error(c, err)
+		return
+	}
+
+	exist, err := model.FindProductBySKU(c, productRequest.SKU, h.db)
+	if err == nil && exist.ID > 0 {
+		render.Error(c, errors.New("Product sku already exists"))
 		return
 	}
 
