@@ -2,8 +2,6 @@ package middleware
 
 import (
 	"fmt"
-	"log"
-	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -20,7 +18,7 @@ func AuthenticateMiddleware(config *config.Config, db orm.DB) gin.HandlerFunc {
 		if len(bearerToken) > 0 {
 			bearerToken = strings.TrimPrefix(bearerToken, "Bearer ")
 		} else {
-			c.AbortWithStatus(http.StatusUnauthorized)
+			common.AbortUnauthorized(c)
 			return
 		}
 
@@ -33,24 +31,24 @@ func AuthenticateMiddleware(config *config.Config, db orm.DB) gin.HandlerFunc {
 		})
 
 		if err != nil || tkn == nil || !tkn.Valid {
-			log.Println(err)
-			common.PanicUnauthorized()
+			common.AbortUnauthorized(c)
 			return
 		}
 
 		payload, ok := tkn.Claims.(*Payload)
 		if !ok {
-			common.PanicUnauthorized()
+			common.AbortUnauthorized(c)
 			return
 		}
 
 		user, err := model.FindUserByEmail(c, *payload.Email, db)
-		if err == nil && user.Email != *payload.Email {
-			c.AbortWithStatus(http.StatusUnauthorized)
+		if (err == nil && user.Email != *payload.Email) || err != nil {
+			common.AbortUnauthorized(c)
 			return
+		} else {
+			c.Set("user", &user)
+			c.Next()
 		}
-		c.Set("user", &user)
-		c.Next()
 	}
 }
 

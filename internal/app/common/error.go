@@ -2,6 +2,8 @@ package common
 
 import (
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type Error struct {
@@ -42,4 +44,8 @@ func PanicNotFound() {
 // PanicUnauthorized /**
 func PanicUnauthorized() {
 	panic(NewError(http.StatusUnauthorized))
+}
+
+func AbortUnauthorized(c *gin.Context) {
+	c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
 }
